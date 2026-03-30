@@ -10,7 +10,10 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URLS = (process.env.FRONTEND_URL || '')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 const PORT = Number(process.env.PORT) || 3000;
 
 const mealsFilePath = path.join(__dirname, 'data', 'available-meals.json');
@@ -21,9 +24,22 @@ app.use(bodyParser.json());
 app.use(express.static(publicDirPath));
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', FRONTEND_URL || '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
+  const requestOrigin = req.headers.origin;
+
+  if (FRONTEND_URLS.length === 0) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  } else if (requestOrigin && FRONTEND_URLS.includes(requestOrigin)) {
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+    res.setHeader('Vary', 'Origin');
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+
   next();
 });
 
@@ -74,10 +90,6 @@ app.post('/orders', async (req, res) => {
 });
 
 app.use((req, res) => {
-  if (req.method === 'OPTIONS') {
-    return res.sendStatus(200);
-  }
-
   res.status(404).json({ message: 'Not found' });
 });
 
