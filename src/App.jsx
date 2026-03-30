@@ -1,17 +1,24 @@
 import Header from "./components/Header";
 import Meals from "./components/Meals";
-// import FloatingFoodIcons from "./components/FloatingFoodIcons";
+import FloatingFoodIcons from "./UI/FloatingFoodIcons";
+import Cart from "./components/Cart";
 import { CartContextProvider } from "./store/CartContext";
+import { UserProgressContextProvider } from "./store/UserProgressContext";
+import CheckOut from "./components/Checkout";
 
 function App() {
   return (
-    <CartContextProvider>
-      {/* <FloatingFoodIcons /> */}
+    <UserProgressContextProvider>
+      <CartContextProvider>
+         <FloatingFoodIcons />
       <div className="app-content">
         <Header />
         <Meals />
-      </div>
-    </CartContextProvider>
+        <Cart />
+        <CheckOut />
+        </div>
+      </CartContextProvider>
+    </UserProgressContextProvider>
   );
 }
 
