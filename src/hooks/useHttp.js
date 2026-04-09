@@ -42,7 +42,7 @@ sendRequest()
 
   return {
     data,
-    loading,
+    isLoading,
     error, 
     sendRequest, 
     clearData
