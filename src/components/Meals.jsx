@@ -8,7 +8,13 @@ export default function Meals() {
   const {data: loadMeals, isLoading, error} = useHttp(`${import.meta.env.VITE_API_BASE_URL}/meals`, requestConfig, [])
 
   if(isLoading){
-   return <p className='center'>Fetching meals ...</p>
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner">🍳</div>
+        <p className="loading-title">Your food is cooking...</p>
+        <p className="loading-subtitle">Our chefs are working their magic! 👨‍🍳✨</p>
+      </div>
+    )
   }
 
   if(error){
