@@ -22,7 +22,9 @@ export default function Header() {
         <h1>The-Byte-Bitez</h1>
       </div>
       <nav>
-        <Button textOnly onClick={handleShowCart}>Cart ({totalCartItems})</Button>
+        <Button textOnly onClick={handleShowCart}>
+          Cart {totalCartItems > 0 && <span className="cart-badge">{totalCartItems}</span>}
+        </Button>
       </nav>
     </header>
   );
