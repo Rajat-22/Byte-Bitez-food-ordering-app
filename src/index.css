@@ -278,6 +278,36 @@ h1 {
   border: 1px solid #ccc;
 }
 
+.input-error {
+  color: #c0392b;
+  font-size: 0.8rem;
+  margin: 0.15rem 0 0.4rem;
+  padding: 0;
+}
+
+.cart-empty {
+  text-align: center;
+  color: #a8a29e;
+  padding: 1.5rem 0;
+  font-size: 1rem;
+}
+
+.cart-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ffc404;
+  color: #1f1a09;
+  font-size: 0.7rem;
+  font-weight: 700;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 99px;
+  padding: 0 0.3rem;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+}
+
 .control-row {
   display: flex;
   justify-content: flex-start;
