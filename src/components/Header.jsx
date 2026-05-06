@@ -15,6 +15,11 @@ export default function Header() {
   function handleShowCart(){
     userProgressCtx.showCart()
   }
+  
+  function handleShowOrderHistory(){
+    userProgressCtx.showOrderHistory()
+  }
+  
   return (
     <header id="main-header">
       <div id="title">
@@ -22,6 +27,9 @@ export default function Header() {
         <h1>The-Byte-Bitez</h1>
       </div>
       <nav>
+        <Button textOnly onClick={handleShowOrderHistory}>
+          Orders
+        </Button>
         <Button textOnly onClick={handleShowCart}>
           Cart {totalCartItems > 0 && <span className="cart-badge">{totalCartItems}</span>}
         </Button>
