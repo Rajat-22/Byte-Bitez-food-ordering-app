@@ -4,29 +4,16 @@ import Error from '../UI/Error';
 
 const requestConfig = {}
 
-function SkeletonCard() {
-  return (
-    <li className="skeleton-card">
-      <div className="skeleton-block skeleton-image" />
-      <div className="skeleton-body">
-        <div className="skeleton-block skeleton-title" />
-        <div className="skeleton-block skeleton-price" />
-        <div className="skeleton-block skeleton-desc-line" />
-        <div className="skeleton-block skeleton-desc-line" />
-        <div className="skeleton-block skeleton-button" />
-      </div>
-    </li>
-  );
-}
-
 export default function Meals() {
   const {data: loadMeals, isLoading, error} = useHttp(`${import.meta.env.VITE_API_BASE_URL}/meals`, requestConfig, [])
 
   if(isLoading){
     return (
-      <ul id="meals">
-        {Array.from({ length: 8 }, (_, i) => <SkeletonCard key={i} />)}
-      </ul>
+     <div className="loading-container">
+        <div className="loading-spinner">🍳</div>
+        <p className="loading-title">Your food is cooking...</p>
+        <p className="loading-subtitle">Our chefs are working their magic! 👨‍🍳✨</p>
+      </div>
     )
   }
 
