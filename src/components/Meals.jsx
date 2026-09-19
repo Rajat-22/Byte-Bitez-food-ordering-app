@@ -24,9 +24,14 @@ export default function Meals() {
 
   if(isLoading){
     return (
-      <ul id="meals">
-        {Array.from({ length: 8 }, (_, i) => <SkeletonCard key={i} />)}
-      </ul>
+      // <ul id="meals">
+      //   {Array.from({ length: 8 }, (_, i) => <SkeletonCard key={i} />)}
+      // </ul>
+     <div className="loading-container">
+        <div className="loading-spinner">🍳</div>
+        <p className="loading-title">Your food is cooking...</p>
+        <p className="loading-subtitle">Our chefs are working their magic! 👨‍🍳✨</p>
+      </div>
     )
   }
 
