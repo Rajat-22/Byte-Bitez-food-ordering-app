@@ -1,4 +1,4 @@
-import { useContext } from "react"
+import { useContext, useState } from "react"
 import Modal from "../UI/Modal"
 import CartContext from "../store/CartContext"
 import { currencyFormatter } from "../utils/formatCurrency"
@@ -21,6 +21,8 @@ export default function CheckOut(){
 
     const {data, isLoading : isSending, error, sendRequest, clearData} = useHttp(`${import.meta.env.VITE_API_BASE_URL}/orders`, requestConfig)
 
+    const [validationErrors, setValidationErrors] = useState({})
+
     const cartTotal = cartCtx.items.reduce((totalPrice, item) => 
     totalPrice + item.quantity * item.price , 0)
 
@@ -34,11 +36,28 @@ export default function CheckOut(){
         clearData()
     }
 
+    function validate(customerData) {
+        const errors = {}
+        if (!customerData.name.trim()) errors.name = 'Full name is required.'
+        if (!customerData.email.trim() || !customerData.email.includes('@')) errors.email = 'A valid email is required.'
+        if (!customerData.street.trim()) errors.street = 'Street is required.'
+        if (!customerData['postal-code'].trim()) errors['postal-code'] = 'Postal code is required.'
+        if (!customerData.city.trim()) errors.city = 'City is required.'
+        return errors
+    }
+
     function handleSubmit(event){
    event.preventDefault();
 
    const fd = new FormData(event.target);
    const customerData = Object.fromEntries(fd.entries())
+
+   const errors = validate(customerData)
+   if (Object.keys(errors).length > 0) {
+       setValidationErrors(errors)
+       return
+   }
+   setValidationErrors({})
 
    sendRequest(
     JSON.stringify({
@@ -77,36 +96,28 @@ export default function CheckOut(){
     }
 
     return <Modal open={userProgressCtx.progress === 'checkout'} onClose={handleClose}>
- <form onSubmit={handleSubmit}>
+ <form onSubmit={handleSubmit} noValidate>
     <h2>Checkout</h2>
     <p>Total Amout : {currencyFormatter.format(cartTotal)}</p>
 
-    <Input 
-    label="Full Name" 
-    type="text"
-    id="name"
-    />
-    <Input 
-    label="E-mail Address" 
-    type="email"
-    id="email"
-    />
-    <Input 
-    label="Street" 
-    type="text"
-    id="street"
-    />
+    <Input label="Full Name" type="text" id="name" />
+    {validationErrors.name && <p className="input-error">{validationErrors.name}</p>}
+
+    <Input label="E-mail Address" type="email" id="email" />
+    {validationErrors.email && <p className="input-error">{validationErrors.email}</p>}
+
+    <Input label="Street" type="text" id="street" />
+    {validationErrors.street && <p className="input-error">{validationErrors.street}</p>}
+
     <div className="control-row">
-<Input 
-    label="Postal Code" 
-    type="text"
-    id="postal-code"
-    />
-    <Input 
-    label="City" 
-    type="text"
-    id="city"
-    />
+      <div>
+        <Input label="Postal Code" type="text" id="postal-code" />
+        {validationErrors['postal-code'] && <p className="input-error">{validationErrors['postal-code']}</p>}
+      </div>
+      <div>
+        <Input label="City" type="text" id="city" />
+        {validationErrors.city && <p className="input-error">{validationErrors.city}</p>}
+      </div>
     </div>
 
     {error && 

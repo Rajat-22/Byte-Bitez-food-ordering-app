@@ -52,6 +52,11 @@ app.get('/meals', async (req, res) => {
   res.json(JSON.parse(meals));
 });
 
+app.get('/orders', async (req, res) => {
+  const orders = await fs.readFile(ordersFilePath, 'utf8');
+  res.json(JSON.parse(orders));
+});
+
 app.post('/orders', async (req, res) => {
   const orderData = req.body.order;
 
@@ -78,7 +83,7 @@ app.post('/orders', async (req, res) => {
 
   const newOrder = {
     ...orderData,
-    id: (Math.random() * 1000).toString(),
+    id: crypto.randomUUID(),
   };
 
   const orders = await fs.readFile(ordersFilePath, 'utf8');

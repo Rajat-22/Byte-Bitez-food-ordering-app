@@ -1,4 +1,6 @@
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
+
+const CART_STORAGE_KEY = "bytebitez_cart";
 
 const CartContext = createContext({
   items: [],
@@ -56,8 +58,21 @@ function cartReducer(state, action) {
   return state;
 }
 
+function loadCartFromStorage() {
+  try {
+    const saved = localStorage.getItem(CART_STORAGE_KEY);
+    return saved ? { items: JSON.parse(saved) } : { items: [] };
+  } catch {
+    return { items: [] };
+  }
+}
+
 export function CartContextProvider({ children }) {
-  const [cart, dispatchCartAction] = useReducer(cartReducer, { items: [] });
+  const [cart, dispatchCartAction] = useReducer(cartReducer, undefined, loadCartFromStorage);
+
+  useEffect(() => {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart.items));
+  }, [cart.items]);
 
   function addItem(item) {
     dispatchCartAction({ type: "ADD_ITEM", item });
